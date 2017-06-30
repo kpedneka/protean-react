@@ -18,16 +18,16 @@ export default class Navigation extends React.Component {
   render() {
     return (
       <div>
-        <Navbar color="faded" light toggleable>
+        <Navbar light toggleable className="color-nav">
           <NavbarToggler right onClick={this.toggle} />
-          <NavbarBrand href="https://reactstrap.github.io/components/navbar/">More Info Here</NavbarBrand>
+          <NavbarBrand href="/">Welcome to Protean</NavbarBrand>
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
               <NavItem>
-                <NavLink href="/components/">Components</NavLink>
+                <NavLink href="/">Login</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href="https://github.com/RooshhilPatel">Github</NavLink>
+                <NavLink href="/">Register</NavLink>
               </NavItem>
             </Nav>
           </Collapse>
