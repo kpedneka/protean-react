@@ -10,15 +10,14 @@
     "react-addons-transition-group": "^15.6.0",
     "react-alert": "^2.1.2",
     "react-dom": "^15.6.1",
-    "react-facebook-login-component": "^0.8.0",
     "react-redux": "^5.0.5",
     "reactstrap": "^4.8.0",
     "redux": "^3.7.1",
-    "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
-    "react-scripts": "1.0.8"
+    "react-scripts": "1.0.8",
+    "redux-logger": "^3.0.6"
   },
   "scripts": {
     "start": "react-scripts start",

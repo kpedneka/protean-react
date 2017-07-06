@@ -1,17 +1,28 @@
 import React, { Component } from 'react';
 import Navigation from './components/Navbar';
-import Login from './components/Login'
+import { connect } from 'react-redux';
+
+import Profile from './components/Profile';
+import Intro from './components/Intro';
 import './App.css';
 
 class App extends Component {
+  
   render() {
     return (
       <div className="App">
         <Navigation />
-        <Login />
+        {this.props.user ? <Profile /> : <Intro />}
       </div>
     );
   }
 }
 
-export default App;
+function mapStateToProps(state) {
+	return {
+		bills: state.bills.bills,
+		user: state.auth.name,
+	}
+}
+
+export default connect(mapStateToProps)(App);
