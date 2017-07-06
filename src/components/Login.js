@@ -1,51 +1,52 @@
 import React from 'react';
-import AlertContainer from 'react-alert'
-import { FacebookLogin } from 'react-facebook-login-component';
+import * as firebase from 'firebase';
+import { connect } from 'react-redux';
+
+import { login, logout } from '../actions/Auth';
 
 class Login extends React.Component{
-
   constructor (props, context) {
     super(props, context);
+
+    this.state = {
+      name: '',
+      loggedIn: false,
+      isLoading: false
+    };
+
+    this.login = this.login.bind(this);
+    this.logout = this.logout.bind(this);
   }
 
-  alertOptions = {
-    offset: 14,
-    position: 'bottom left',
-    theme: 'dark',
-    time: 5000,
-    transition: 'scale'
+  login(e) {
+    e.preventDefault();
+    this.props.login();
+    this.setState({ loggedIn: true });
   }
 
-  showAlert = () => {
-    this.msg.show('Some text or component', {
-      time: 2000,
-      type: 'success',
-    })
-  }
-
-  responseFacebook (response) {
-    console.log(response);
-    //anything else you want to do(save to localStorage)...
+  logout(e) {
+    e.preventDefault();
+    this.props.logout();
+    this.setState({ loggedIn: false });
   }
 
   render () {
     return (
       <div>
-        <FacebookLogin socialId="proteanID"
-                       language="en_US"
-                       scope="public_profile,email"
-                       responseHandler={this.responseFacebook}
-                       xfbml={true}
-                       fields="id,email,name"
-                       version="v2.5"
-                       className="facebook-login"
-                       buttonText="Login With Facebook"/>
-        <AlertContainer ref={a => this.msg = a} {...this.alertOptions} />
-        <button onClick={this.showAlert}>Submit</button>
+        <button onClick={this.login}>Login with Facebook</button>
+        <button onClick={this.logout}>Logout</button>
       </div>
     );
   }
 
 }
 
-export default Login;
+// passing in the login action as a prop to Login component
+function mapDispatchToProps (dispatch) {
+  return {
+    login: () => { dispatch(login()) },
+    logout: () => { dispatch(logout()) }
+  }
+}
+
+export default connect(null, mapDispatchToProps)(Login);

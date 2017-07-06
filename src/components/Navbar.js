@@ -20,7 +20,7 @@ export default class Navigation extends React.Component {
       <div>
         <Navbar light toggleable className="color-nav">
           <NavbarToggler right onClick={this.toggle} />
-          <NavbarBrand href="/">Welcome to Protean</NavbarBrand>
+          <NavbarBrand href="/">Protean</NavbarBrand>
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
               <NavItem>
