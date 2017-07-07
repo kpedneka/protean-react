@@ -1,9 +1,12 @@
+import * as firebase from 'firebase';
 
-export function addBill(user) {
-	console.log('inside the action for addBill',user);
-	return {
-		type: 'new',
-		user
+export function addBill(name) {
+	console.log('inside the action for addBill ', name);
+	var database = firebase.database();
+	database.ref('/users')
+	return dispatch => {
+		type: 'NEW_BILL',
+		name
 	}
 }
 

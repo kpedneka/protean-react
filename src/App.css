@@ -1,21 +1,32 @@
 .App {
-  text-align: center;
+	text-align: center;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.user-bills {
+	margin-top: 20px;
+	font-size: large;
+	font-weight: 300;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+.user-dashboard {
+	display: inline-block;
 }
 
-.App-intro {
-  font-size: large;
+.user-functions {
+	margin-top: 20px;
+	padding: 10px;
+	display: inline;
+}
+
+.user-functions button {
+	margin: 20px;
+}
+
+.user-profile {
+	margin-top: 20px;
+	padding: 10px;
+	font-weight: 300;
+	font-size: x-large;
 }
 
 @keyframes App-logo-spin {

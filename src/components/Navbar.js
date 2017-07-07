@@ -1,28 +1,13 @@
-import React from 'react';
-import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink } from 'reactstrap';
+import React, { Component } from 'react';
+import { Navbar, NavbarBrand } from 'reactstrap';
 
-export default class Navigation extends React.Component {
-  constructor(props) {
-    super(props);
+export default class Navigation extends Component {
 
-    this.toggle = this.toggle.bind(this);
-    this.state = {
-      isOpen: false
-    };
-  }
-  toggle() {
-    this.setState({
-      isOpen: !this.state.isOpen
-    });
-  }
   render() {
     return (
-      <div>
-        <Navbar light toggleable className="color-nav">
-          <NavbarToggler right onClick={this.toggle} />
+        <Navbar light className="color-nav">
           <NavbarBrand href="/">Protean</NavbarBrand>
         </Navbar>
-      </div>
     );
   }
 }
