@@ -3,7 +3,11 @@ import * as firebase from 'firebase';
 export function logout () {
 	console.log('hello reached logout action');
 	// dispatch some action that removes the stored token
-	localStorage.removeItem('fbToken');
+	firebase.auth().signOut().then(function() {
+    // Sign-out successful.
+  }).catch(function(error) {
+    // An error happened.
+  });
   return dispatch => {
     dispatch({
       type: 'LOGOUT_USER',
@@ -18,9 +22,7 @@ export function login () {
   return dispatch => {
     var provider = new firebase.auth.FacebookAuthProvider();
     firebase.auth().signInWithPopup(provider).then(function(result) {
-    	var token = result.credential.accessToken;
       var user = result.user;
-      console.log(user);
       // connect to database to check for exisitng user in database
       var database = firebase.database();
       database.ref('/users/'+user.uid)
@@ -43,8 +45,6 @@ export function login () {
             console.log('FOUND USER');
           }
       })
-      // add fbToken to localStorage and then call reducer
-      localStorage.setItem('fbToken', token);
       console.log('result from login ', user.displayName);
         dispatch({
           type: 'LOGIN_USER',

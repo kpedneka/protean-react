@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import { connect } from 'react-redux';
-import { Button } from 'reactstrap';
+import { Button, Image } from 'react-bootstrap';
 
+import NewBill from './NewBill';
 import { logout } from '../actions/Auth';
 import { addBill } from '../actions/Bills';
 
@@ -11,15 +12,25 @@ class Profile extends Component{
     super(props, context);
     this.state = {
       name: '',
-      photoURL: ''
+      photoURL: '',
+      showNewBill: false
     }
 
     this.logout = this.logout.bind(this);
-    this.addBill = this.addBill.bind(this);
+    this.setNewBillVisible = this.setNewBillVisible.bind(this);
   }
 
   componentDidMount() {
+  firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        console.log('User is signed in.')
+      } else {
+        console.log('No user is signed in.')
+      }
+    });
     var uid = firebase.auth().currentUser.uid;
+    // var uid = authUser.uid;
+    console.log(firebase.auth().currentUser)
     firebase.database().ref('/users/'+uid)
       .once('value')
       .then(snap => {
@@ -34,27 +45,28 @@ class Profile extends Component{
     this.props.logout();
   }
 
-  addBill(e) {
+  setNewBillVisible(e) {
     e.preventDefault();
-    this.props.addBill(this.state.name);
+    this.setState({showNewBill: !this.state.showNewBill})
   }
 
   render () {
     return (
       <div className="user-dashboard">
         <div className="user-functions">
-          <Button color="secondary" onClick={this.addBill}>+ bill</Button>
-          <Button color="secondary">+ group</Button>
-          <Button color="primary" onClick={this.logout}>Logout</Button>
+          <Button bsStyle="default" onClick={this.setNewBillVisible}>+ bill</Button>
+          <Button bsStyle="default">+ group</Button>
+          <Button bsStyle="default" onClick={this.logout}>Logout</Button>
         </div>
         <div className="user-profile">
           <p> Hi, {this.state.name}</p>
-          <img src={this.state.photoURL} alt="profile" width="300" height="300"/>
+          <Image src={this.state.photoURL} alt="profile" width="200" height="200" rounded />
         </div>
 
         <div className="user-bills">
           {this.state.bills ? <p>Have yet to implement the function to show bills</p> : <p>Looks like you do not have any bills yet</p>}
         </div>
+        {this.state.showNewBill ? <NewBill /> : null}
       </div>
     );
   }

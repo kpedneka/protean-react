@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Jumbotron, Button, Container } from 'reactstrap';
+import { Jumbotron, Button } from 'react-bootstrap';
 
 import { login } from '../actions/Auth';
 
@@ -19,7 +19,7 @@ class Intro extends Component {
 
 	render() {
 		return (
-			<Container>
+			<div>
 				<Jumbotron>
 					<h1 className="display-10">Welcome to Protean</h1>
 					<p className="lead">The simplest way to keep track of all your IOUs</p>
@@ -27,10 +27,10 @@ class Intro extends Component {
 					<p className="lead">
 						Get started today! Sign in with facebook
 						<br />
-					<Button color="primary" onClick={this.login}>Sign in</Button>
+					<Button bsStyle="primary" onClick={this.login}>Sign in</Button>
 					</p>
 				</Jumbotron>
-		    </Container>
+		    </div>
 		);
 	}
 }

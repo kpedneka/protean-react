@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import { Navbar, NavbarBrand } from 'reactstrap';
+import { Navbar } from 'react-bootstrap';
 
 export default class Navigation extends Component {
-
-  render() {
-    return (
-        <Navbar light className="color-nav">
-          <NavbarBrand href="/">Protean</NavbarBrand>
-        </Navbar>
-    );
-  }
+	render() {
+	    return (
+	        <Navbar className="color-nav">
+	          <Navbar.Brand>Protean</Navbar.Brand>
+	        </Navbar>
+	    );
+	}
 }

@@ -5,5 +5,17 @@ body {
 }
 
 .color-nav{
-  background-color: #76ffb0;
+  background-color: #00cc56;
+  font-weight: 800;
+  font-family: 'Proza Libre', sans-serif;
+  font-style: italic;
+  font-size: x-large;
+}
+
+.navbar-default .navbar-brand {
+  color: white;
+}
+
+.navbar-default .navbar-brand:hover {
+  color: white;
 }
