@@ -6,7 +6,7 @@ const initialState = {
 }
 export default (state = initialState, action) => {
 	switch (action.type){
-		case "NEW_BILL":
+		case "CREATE_NEW_BILL":
 			return state;
 		default:
 			return state;

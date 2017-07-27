@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Button, Image } from 'react-bootstrap';
 
 import NewBill from './NewBill';
+// import NewGroup from './NewGroup';
 import { logout } from '../actions/Auth';
 import { addBill } from '../actions/Bills';
 
@@ -13,29 +14,22 @@ class Profile extends Component{
     this.state = {
       name: '',
       photoURL: '',
-      showNewBill: false
+      showNewBill: false,
+      showNewGroup: false
     }
 
     this.logout = this.logout.bind(this);
     this.setNewBillVisible = this.setNewBillVisible.bind(this);
+    this.setNewGroupVisible = this.setNewGroupVisible.bind(this);
   }
 
   componentDidMount() {
-  firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        console.log('User is signed in.')
-      } else {
-        console.log('No user is signed in.')
-      }
-    });
     var uid = firebase.auth().currentUser.uid;
-    // var uid = authUser.uid;
-    console.log(firebase.auth().currentUser)
     firebase.database().ref('/users/'+uid)
       .once('value')
       .then(snap => {
         var user = snap.val();
-        console.log('the currentUser information\n', user);
+        // console.log('the currentUser information\n', user);
         this.setState({ name: user.name, photoURL: user.photoURL });
       })
   }
@@ -50,12 +44,18 @@ class Profile extends Component{
     this.setState({showNewBill: !this.state.showNewBill})
   }
 
+  setNewGroupVisible(e) {
+    e.preventDefault();
+    this.setState({showNewGroup: !this.state.showNewGroup})
+    alert('normally, this would show the modal for creating a new group');
+  }
+
   render () {
     return (
       <div className="user-dashboard">
         <div className="user-functions">
           <Button bsStyle="default" onClick={this.setNewBillVisible}>+ bill</Button>
-          <Button bsStyle="default">+ group</Button>
+          <Button bsStyle="default" onClick={this.setNewGroupVisible}>+ group</Button>
           <Button bsStyle="default" onClick={this.logout}>Logout</Button>
         </div>
         <div className="user-profile">
@@ -66,7 +66,7 @@ class Profile extends Component{
         <div className="user-bills">
           {this.state.bills ? <p>Have yet to implement the function to show bills</p> : <p>Looks like you do not have any bills yet</p>}
         </div>
-        {this.state.showNewBill ? <NewBill /> : null}
+        {this.state.showNewBill ? <NewBill state={this.state.showNewBill}/> : null}
       </div>
     );
   }

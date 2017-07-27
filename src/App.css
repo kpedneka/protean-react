@@ -2,6 +2,15 @@
 	text-align: center;
 }
 
+form {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+.form-group {
+	margin: 0px;
+}
+
 .user-bills {
 	margin-top: 20px;
 	font-size: large;

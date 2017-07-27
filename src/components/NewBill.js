@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { Pie } from 'react-chartjs-2';
-import { ControlLabel, FormGroup, FormControl, HelpBlock } from 'react-bootstrap';
+import { WithContext as ReactTags } from 'react-tag-input';
+import { connect } from 'react-redux';
+import { ControlLabel, FormGroup, FormControl, HelpBlock, Modal, Button } from 'react-bootstrap';
+
+import { getUsers } from '../actions/User';
 
 function FieldGroup({ id, label, help, ...props }) {
   return (
@@ -13,7 +17,59 @@ function FieldGroup({ id, label, help, ...props }) {
 }
 
 class NewBill extends Component {
-	render () {
+	constructor(props) {
+        super(props);
+        this.state = {
+            title: '',
+            description: '',
+            amount: 0,
+            tags: [],
+            suggestions: [],
+            showNewBill: false
+        }
+        this.handleDelete = this.handleDelete.bind(this);
+        this.handleAddition = this.handleAddition.bind(this);
+        this.handleDrag = this.handleDrag.bind(this);
+        this.setNewBillVisible = this.setNewBillVisible.bind(this);
+    }
+
+    componentDidMount() {
+        getUsers();
+        this.setState({suggestions: this.props.users})
+    }
+
+    handleDelete(i) {
+        var tags = this.state.tags;
+        tags.splice(i, 1);
+        this.setState({tags: tags});
+        console.log(this.state);
+    }
+ 
+    handleAddition(tag) {
+        var tags = this.state.tags;
+        tags.push({
+            id: tags.length + 1,
+            text: tag
+        });
+        this.setState({tags: tags});
+        console.log(this.state);
+    }
+ 
+    handleDrag(tag, currPos, newPos) {
+        var tags = this.state.tags;
+        // mutate array 
+        tags.splice(currPos, 1);
+        tags.splice(newPos, 0, tag);
+        // re-render 
+        this.setState({ tags: tags });
+    }
+
+      setNewBillVisible(e) {
+    e.preventDefault();
+    this.setState({showNewBill: !this.state.showNewBill})
+  }
+
+    render () {
         var data = {
             datasets: [{
                 data: [10, 20, 30],
@@ -26,23 +82,28 @@ class NewBill extends Component {
         };
 		return (
             <div>
-                <form>
-                    <FieldGroup
-                        id="formControlsTitle"
-                        type="text"
-                        label="Text"
-                        placeholder="Enter text" />
-                    <FieldGroup
-                        id="formControlsDescription"
-                        type="description"
-                        label="Bill details"
-                        placeholder="Enter more details about the bill" />
-                </form>
-
-    			<Pie data={data} />
+                <ReactTags tags={this.state.tags}
+                    suggestions={this.state.suggestions}
+                    handleDelete={this.handleDelete}
+                    handleAddition={this.handleAddition}
+                    handleDrag={this.handleDrag} 
+                    placeholder={'add members'} />
+                <Pie data={data} />
             </div>
 		);
 	}
 }
 
-export default NewBill;
+function mapStateToProps(state) {
+    return {
+        users: state.user.users
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        getUsers: () => { dispatch(getUsers) }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewBill);
