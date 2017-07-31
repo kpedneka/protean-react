@@ -16,49 +16,53 @@ export function logout () {
   }
 };
 
-export function login () {
-	console.log('hello, reached login action');
-	// dispatch some action that does the login
+export function login() {
+  console.log('hello, reached login action');
+  // dispatch some action that does the login
   return dispatch => {
-    var provider = new firebase.auth.FacebookAuthProvider();
-    firebase.auth().signInWithPopup(provider).then(function(result) {
-      var user = result.user;
-      // connect to database to check for exisitng user in database
-      var database = firebase.database();
-      database.ref('/users/'+user.uid)
-        .once('value')
-        .then(snap => {
-          if(!snap.val()) {
-            console.log('CREATING NEW USER')
-            var new_user = {
-              name: user.displayName,
-              email: user.email,
-              photoURL: 'https://graph.facebook.com/'+user.providerData[0].uid+'/picture?width=9999',
-              bills: null
+    const provider = new firebase.auth.FacebookAuthProvider();
+    firebase.auth().signInWithRedirect(provider);
+    firebase.auth().getRedirectResult().then(function(result) {
+      if (result.credential) {
+        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+        const user = result.user;
+        firebase.database().ref('/users/'+user.uid)
+          .once('value')
+          .then(snap => {
+            // if no value exists at this node, create a new one
+            if (!snap.val()){
+              console.log('CREATING NEW USER');
+              const new_user = {
+                name: user.displayName,
+                email: user.email,
+                photoURL: 'https://graph.facebook.com/'+user.providerData[0].uid+'/picture?width=9999',
+                bills: null
+              }
+              var updates = {};
+              updates['/users/' + user.uid ] = new_user;
+              // add user information to database
+              firebase.database().ref().update(updates);              
+            } else {
+              console.log('FOUND USER');
             }
-            var updates = {};
-            updates['/users/' + user.uid ] = new_user;
-            // add user information to database
-            database.ref().update(updates);
-          } else {
-            // do nothing
-            console.log('FOUND USER');
-          }
+          })
+      }
+      // The signed-in user info.
+      console.log('result from login: ', result.user.displayName)
+      dispatch({
+        type: 'LOGIN_USER',
+        payload: result.user.displayName
       })
-      console.log('result from login ', user.displayName);
-        dispatch({
-          type: 'LOGIN_USER',
-          payload: user.displayName
-        })
-  	})
+    }).catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      console.log('error: '+errorCode+'\nmsg: '+errorMessage);
+      // The email of the user's account used.
+      // var email = error.email;
+      // The firebase.auth.AuthCredential type that was used.
+      // var credential = error.credential;
+      // ...
+    });
   }
-  // .catch(function(error) {
-  // 	// Handle Errors here.
-  // 	var errorCode = error.code;
-  // 	var errorMessage = error.message;
-  // 	// ...
-  // 	console.log('error code: ', errorCode);
-  //   console.log('error message: ', errorMessage);
-  // });
 }
-

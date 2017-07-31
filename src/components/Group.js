@@ -84,7 +84,7 @@ class Group extends Component {
                     
                     <Modal.Footer>
                         <Button bsStyle="default" onClick={this.setNewGroupVisible}>Cancel</Button>
-                        <Button bsStyle="primary" type="submit" onClick={this.getData}>Save bill</Button>
+                        <Button bsStyle="primary" type="submit" onClick={this.getData}>Save group</Button>
                   </Modal.Footer>
                 </Modal>
             </div>

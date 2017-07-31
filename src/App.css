@@ -2,45 +2,103 @@
 	text-align: center;
 }
 
+.bill-item {
+	border: 1px solid orange;
+	border-radius: 10px;
+	margin-bottom: 5px;
+	width: 50%;
+}
+
+.bill-item span {
+	margin-right: 5px;
+	border: 1px solid orange;
+	border-radius: 10px;
+	color: white;
+	background-color: orange;
+	padding: 1px 5px;
+}
+
+.form-inline .container {
+	width: inherit;
+}
+
 form {
 	margin-top: 15px;
 	margin-bottom: 15px;
 }
 
 .form-control {
-	margin: 8px;
-	width: 50%;
+  padding: 10px;
+  margin: 10px;
+  border: none;
+  border-bottom: solid 2px #c9c9c9;
+  transition: border 0.3s;
+  width: 96%;
+}
+
+.form-control.focus {
+  border-bottom: solid 2px #969696;
+  outline: none;
 }
 
 .form-group {
 	margin: 0px;
+	width: 100%;
 }
 
 .navbar{
 	margin-bottom: 0px;
 }
 
+.ReactTags__tagInput {
+	display: run-in;
+	width: inherit;
+}
+
 .ReactTags__tag {
 	margin-left: 10px;
-	background-color: #c3c2e6;
+	background-color: #FF6384;
 	border-radius: 10px;
 	padding-left: 5px;
 	padding-right: 5px;
+	display: inline-block;
+}
+
+.ReactTags__tags {
+	display: inline-block;
+	width: 100%;
 }
 
 .ReactTags__selected{
 	text-align: center;
 	padding: 0px;
+	display: inline-block;
+	width: inherit;
+	
 }
 
 .ReactTags__remove {
 	margin-left: 3px;
+	color: white;
+	float: right;
+}
+
+.ReactTags__tagItems {
+	vertical-align: middle;
+	margin: auto;
+	width: inherit;
+	height: auto;
+}
+
+.ReactTags__tagItems span {
+	margin-bottom: 5px; 
 }
 
 .user-bills {
-	margin-top: 20px;
+	margin: 20px auto;
 	font-size: large;
 	font-weight: 300;
+	text-align: center;
 }
 
 .user-dashboard {

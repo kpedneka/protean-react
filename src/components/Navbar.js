@@ -5,7 +5,7 @@ export default class Navigation extends Component {
 	render() {
 	    return (
 	        <Navbar className="color-nav">
-	          <Navbar.Brand>Protean</Navbar.Brand>
+	          <Navbar.Brand><a href="/">Protean</a></Navbar.Brand>
 	        </Navbar>
 	    );
 	}

@@ -1,5 +1,9 @@
 import * as firebase from 'firebase';
 
+export function createGroup() {
+  
+}
+
 export function getUsers() {
 	var currentUser = firebase.auth().currentUser;
 	if (!currentUser){
@@ -7,7 +11,7 @@ export function getUsers() {
 	}
 	
 	firebase.database().ref('/users/')
-	.once('value')
+    .once('value')
     .then(snap => {
     	var arr = [];
     	if(snap.val()) {
