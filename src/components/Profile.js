@@ -59,14 +59,16 @@ class Profile extends Component{
 
   componentDidMount() {
     var uid = firebase.auth().currentUser.uid;
-
-    firebase.database().ref('/users/'+uid)
+    console.log(uid)
+    if (uid){
+      firebase.database().ref('/users/'+uid)
       .once('value')
       .then(snap => {
         var user = snap.val();
-        // console.log('the currentUser information\n', user);
+        console.log('the currentUser information\n', user);
         this.setState({ name: user.name, photoURL: user.photoURL });
       });
+    }
       // this function triggers whenever the page loads for the first time
       var ref = firebase.database().ref("bills");
       ref.orderByValue().once("value").then( snapshot => {

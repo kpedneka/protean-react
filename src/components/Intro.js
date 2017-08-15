@@ -11,7 +11,6 @@ class Intro extends Component {
 		this.login = this.login.bind(this);
 	}
 
-
 	login(e) {
 		e.preventDefault();
 		this.props.login();
