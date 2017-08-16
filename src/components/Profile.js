@@ -13,15 +13,19 @@ import { getBills } from '../actions/Bills';
 function ShowBills(props) {
   console.log('in ShowBills function');
   console.log(props.data.length);
+  
   const options = {  
     weekday: "long", year: "numeric", month: "short",  
     day: "numeric", hour: "2-digit", minute: "2-digit"  
   };
+
   return (
     <div className="user-bills">
       {props.data.map(function (bill, index) {
         return(
           <div key={bill.dateCreated} className="bill-item" >
+            <span onClick={props.editBill.bind(this)} >edit</span>
+            <span onClick={props.deleteBill.bind(this, bill.key)} >x</span>
             <div>{bill.title} </div>
             <div>{bill.description}</div>
             <div>{bill.amount}</div>
@@ -42,7 +46,9 @@ function ShowBills(props) {
 }
 
 ShowBills.propTypes = {
-  data: PropTypes.array.isRequired
+  data: PropTypes.array.isRequired,
+  editBill: PropTypes.func.isRequired,
+  deleteBill: PropTypes.func.isRequired
 }
 
 class Profile extends Component{
@@ -55,6 +61,8 @@ class Profile extends Component{
     }
 
     this.logout = this.logout.bind(this);
+    this.editBill = this.editBill.bind(this);
+    this.deleteBill = this.deleteBill.bind(this);
   }
 
   componentDidMount() {
@@ -69,30 +77,42 @@ class Profile extends Component{
         this.setState({ name: user.name, photoURL: user.photoURL });
       });
     }
-      // this function triggers whenever the page loads for the first time
-      var ref = firebase.database().ref("bills");
-      ref.orderByValue().once("value").then( snapshot => {
-        snapshot.forEach(snapChild => {
-          var newArray = this.state.bills ? this.state.bills.slice() : [];
-          newArray.push(snapChild.val());
-          this.setState({ bills: newArray });
-          console.log(this.state);
-        });
-      });
-      // this function triggers whenever a bill gets changed (added/deleted)
-      ref.on("child_changed", function(snapshot) {
-        var changedPost = snapshot.val();
-        console.log("The updated post title is " + changedPost.title);
+    // this function triggers whenever the page loads for the first time
+    var ref = firebase.database().ref("bills");
+    ref.orderByValue().once("value").then( snapshot => {
+      snapshot.forEach(snapChild => {
         var newArray = this.state.bills ? this.state.bills.slice() : [];
-        newArray.push(changedPost);
+        newArray.push(snapChild.val());
         this.setState({ bills: newArray });
         console.log(this.state);
-      }.bind(this));
+      });
+    });
+    // this function triggers whenever a bill gets changed (added/deleted)
+    ref.on("child_changed", function(snapshot) {
+      var changedPost = snapshot.val();
+      console.log("The updated post title is " + changedPost.title);
+      var newArray = this.state.bills ? this.state.bills.slice() : [];
+      newArray.push(changedPost);
+      this.setState({ bills: newArray });
+      console.log(this.state);
+    }.bind(this));
   }
 
   logout(e) {
     e.preventDefault();
     this.props.logout();
+  }
+
+  editBill(e) {
+    console.log('clicked edit');
+  }
+
+  deleteBill(key) {
+    console.log('clicked delete for bill created at ', key);
+    // get a reference to the location of the bill
+    const ref = firebase.database().ref('/bills/'+key)
+    // removes bill from reference location
+    ref.remove();
   }
 
   render () {
@@ -108,7 +128,7 @@ class Profile extends Component{
           <Image src={this.state.photoURL} alt="profile" width="200" height="200" rounded />
         </div>
 
-        {this.state.bills ? <ShowBills data={this.state.bills} /> : <p>Looks like you do not have any bills yet</p>}
+        {this.state.bills ? <ShowBills data={this.state.bills} deleteBill={this.deleteBill} editBill={this.editBill} /> : <p>Looks like you do not have any bills yet</p>}
       </div>
     );
   }

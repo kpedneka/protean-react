@@ -57,7 +57,7 @@ export function writeBill(title, description, amount, tags) {
             title: title, description: description,
             amount: Number.parseFloat(amount), tags: tags,
             dateCreated: new Date(), dateResolved: null,
-            resolved: false
+            resolved: false, key: newPostKey
     };
     var updates = {};
     updates['/bills/' + newPostKey] = postData;

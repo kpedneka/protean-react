@@ -24,13 +24,12 @@ class Bill extends Component {
             amount: 0,
             tags: [],
             data: {datasets: [{ data: [], backgroundColor: [], hoverBackgroundColor: [] }], labels: []},
-            suggestions: [],
+            suggestions: ["kunal", "adi", "ria", "amer"],
             showNewBill: false
         }
 
         this.handleDelete = this.handleDelete.bind(this);
         this.handleAddition = this.handleAddition.bind(this);
-        this.handleDrag = this.handleDrag.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.setNewBillVisible = this.setNewBillVisible.bind(this);
         this.writeBill = this.writeBill.bind(this);
@@ -39,35 +38,39 @@ class Bill extends Component {
     }
 
     handleDelete(i) {
-        var tags = this.state.tags.slice();
-        tags.splice(i, 1);
+        this.setState(oldState => {
+            var tags = oldState.tags.slice();
+            tags.splice(i, 1);
 
-        // handle each person's amount, i -th location was deleted
-        var data = Object.assign({}, this.state.data);
-        data.datasets[0].backgroundColor.splice(i, 1);
-        data.datasets[0].hoverBackgroundColor.splice(i, 1);
-        data.datasets[0].data.splice(i, 1);
-        data.labels.splice(i, 1);;
-        this.setState({ tags: tags, data: data });
+            // handle each person's amount, i -th location was deleted
+            var data = Object.assign({}, oldState.data);
+            data.datasets[0].backgroundColor.splice(i, 1);
+            data.datasets[0].hoverBackgroundColor.splice(i, 1);
+            data.datasets[0].data.splice(i, 1);
+            data.labels.splice(i, 1);
+            return { tags: tags, data: data }
+        })
     }
  
     handleAddition(tag) {
-        var tags = this.state.tags.slice();
-        var data = Object.assign({}, this.state.data);
-        // iterate tags and ensure no repetitions
-        tags.push({
-            id: tags.length + 1,
-            text: tag,
-            amount: this.state.amount/(tags.length)
-        });
-        // generate random color and then update pie char data
-        const color = this.getRandomColor();
-        data.datasets[0].backgroundColor.push(color);
-        data.datasets[0].hoverBackgroundColor.push(color);
-        data.datasets[0].data.push(this.state.amount/(tags.length));
-        data.labels.push(tag);
-        // update state
-        this.setState({ tags: tags, data: data }, this.updateTags(this.state.amount, tags.length));
+        // update state 
+        this.setState(oldState => {
+            var tags = oldState.tags.slice();
+            var data = Object.assign({}, oldState.data);
+            // iterate tags and ensure no repetitions
+            tags.push({
+                id: tags.length,
+                text: tag,
+                amount: oldState.amount/(tags.length + 1)
+            });
+            // generate random color and then update pie char data
+            const color = this.getRandomColor();
+            data.datasets[0].backgroundColor.push(color);
+            data.datasets[0].hoverBackgroundColor.push(color);
+            data.datasets[0].data.push(oldState.amount/(tags.length));
+            data.labels.push(tag);
+            return { tags: tags, data : data };
+        })
     }
 
     getRandomColor() {
@@ -78,35 +81,28 @@ class Bill extends Component {
       }
       return color;
     }
- 
-    handleDrag(tag, currPos, newPos) {
-        var tags = this.state.tags;
-        // mutate array 
-        tags.splice(currPos, 1);
-        tags.splice(newPos, 0, tag);
-        // re-render 
-        this.setState({ tags: tags });
-    }
+
     // update amount for each tag based on equal distribution
     updateTags(amount, length) {
-        const share = Number.parseFloat(amount)/length;
-        console.log('share is now ', share);
-        var tags = this.state.tags;
-        // data is the whole data object for this.state.data
-        var data = Object.assign({}, this.state.data);
-        tags.forEach((tag, index) => {
-            tag.amount = share
-            data.datasets[0].data[index] = share;
-        });
-        this.setState({ tags: tags, data: data });
+        this.setState(oldState => {
+            const share = Number.parseFloat(amount)/length;
+            console.log('share is now ', share);
+            var tags = oldState.tags;
+            // data is the whole data object for this.state.data
+            var data = Object.assign({}, oldState.data);
+            tags.forEach((tag, index) => {
+                tag.amount = share
+                data.datasets[0].data[index] = share;
+            })
+            return { tags: tags, data: data }
+        })
     }
 
     handleChange(e) {
-        e.preventDefault();
-        // console.log('hi', e.target.value)
         // set the state based on the input
         if (e.target.id === 'amount') {
             // update each person's amount
+            console.log('amount is ', e.target.value)
             this.setState({[e.target.id] : e.target.value}, this.updateTags(e.target.value, this.state.tags.length));
         } else {
             this.setState({[e.target.id] : e.target.value }, console.log(this.state, e.target.value));
@@ -122,6 +118,7 @@ class Bill extends Component {
         // dispatch action to write the bill
         this.props.writeBill(this.state.title, this.state.description, this.state.amount, this.state.tags);
         this.setNewBillVisible();
+        // reset the state to initial state
     }
 
     render () {
@@ -159,7 +156,7 @@ class Bill extends Component {
                             suggestions={this.state.suggestions}
                             handleDelete={this.handleDelete}
                             handleAddition={this.handleAddition}
-                            handleDrag={this.handleDrag} 
+                            handleDrag={false} 
                             placeholder={'Type and press enter to add members'} 
                             autofocus={false}
                             classNames = {{tagInputField: 'form-control'}}/>
